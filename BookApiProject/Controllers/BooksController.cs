@@ -45,7 +45,7 @@ public class BooksController : ControllerBase
     public async Task<ActionResult<BookReadDto>> CreateAsync(BookCreateDto newBook)
     {
         var created = await _bookService.CreateAsync(newBook);
-        return CreatedAtAction(nameof(GetByIdAsync), new { id = created.Id }, created);
+        return Created($"/api/books/{created.Id}", created);
     }
 
     /// <summary>

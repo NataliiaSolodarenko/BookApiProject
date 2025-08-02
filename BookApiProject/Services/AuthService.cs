@@ -56,7 +56,7 @@ public class AuthService : IAuthService
 
         var user = _mapper.Map<User>(registerInfo);
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerInfo.Password);
-        user.RoleId = 1;
+        user.RoleId = 3;
 
         _context.Users.Add(user);
         await _context.SaveChangesAsync();

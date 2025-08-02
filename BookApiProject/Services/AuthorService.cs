@@ -23,7 +23,7 @@ public class AuthorService : IAuthorService
     /// </summary>
     public async Task<IEnumerable<AuthorReadDto>> GetAllAsync()
     {
-        var authors = await _context.Authors.ToListAsync();
+        var authors = await _context.Authors.AsNoTracking().ToListAsync();
         return _mapper.Map<IEnumerable<AuthorReadDto>>(authors);
     }
 
@@ -62,7 +62,7 @@ public class AuthorService : IAuthorService
             throw new AuthorNotFoundException(id);
 
         author.FirstName = updatedDto.FirstName;
-        author.FirstName = updatedDto.LastName;
+        author.LastName = updatedDto.LastName;
         author.Bio = updatedDto.Bio;
         author.BirthDate = updatedDto.BirthDate;
 

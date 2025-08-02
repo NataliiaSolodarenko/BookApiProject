@@ -41,10 +41,10 @@ public class AuthorsController : ControllerBase
     /// <response code="201">Author created successfully.</response>
     /// <response code="400">Invalid author data.</response>
     [HttpPost]
-    public async Task<ActionResult> CreateAsync(AuthorCreateDto newAuthor)
+    public async Task<ActionResult> CreateAsync([FromBody] AuthorCreateDto newAuthor)
     {
         var created = await _authorService.CreateAsync(newAuthor);
-        return CreatedAtAction(nameof(GetByIdAsync), new { id = created.Id }, created);
+        return Created($"/api/authors/{created.Id}", created);
     }
 
     /// <summary>

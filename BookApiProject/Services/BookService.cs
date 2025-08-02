@@ -23,7 +23,7 @@ public class BookService : IBookService
     /// </summary>
     public async Task<IEnumerable<BookReadDto>> GetAllAsync()
     {
-        var books = await _context.Books.ToListAsync();
+        var books = await _context.Books.AsNoTracking().ToListAsync();
         return _mapper.Map<IEnumerable<BookReadDto>>(books);
     }
 
