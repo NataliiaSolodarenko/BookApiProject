@@ -1,5 +1,7 @@
 using AutoMapper;
 using MyApp.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using BookApiProject.Models;
 
 /// <summary>
 /// Service for managing authors.
@@ -7,26 +9,31 @@ using MyApp.Exceptions;
 /// </summary>
 public class AuthorService : IAuthorService
 {
+    private readonly BookDbContext _context;
     private readonly IMapper _mapper;
 
-    public AuthorService(IMapper mapper)
+    public AuthorService(BookDbContext context, IMapper mapper)
     {
+        _context = context;
         _mapper = mapper;
     }
 
     /// <summary>
-    /// Retrieves all authors from the data store.
+    /// Retrieves all authors from the data base.
     /// </summary>
-    public IEnumerable<AuthorReadDto> GetAll() =>
-        _mapper.Map<IEnumerable<AuthorReadDto>>(DataStorage.Authors);
+    public async Task<IEnumerable<AuthorReadDto>> GetAllAsync()
+    {
+        var authors = await _context.Authors.ToListAsync();
+        return _mapper.Map<IEnumerable<AuthorReadDto>>(authors);
+    }
 
     /// <summary>
     /// Retrieves a specific author by ID.
     /// Throws AuthorNotFoundException if the author does not exist.
     /// </summary>
-    public AuthorReadDto GetById(int id)
+    public async Task<AuthorReadDto> GetByIdAsync(int id)
     {
-        var author = DataStorage.Authors.FirstOrDefault(a => a.Id == id);
+        var author = await _context.Authors.FindAsync(id);
         if (author == null)
             throw new AuthorNotFoundException(id);
 
@@ -36,49 +43,51 @@ public class AuthorService : IAuthorService
     /// <summary>
     /// Creates a new author.
     /// </summary>
-    public AuthorReadDto Create(AuthorCreateDto newAuthor)
+    public async Task<AuthorReadDto> CreateAsync(AuthorCreateDto newAuthorDto)
     {
-        var author = _mapper.Map<Author>(newAuthor);
-        author.Id = DataStorage.Authors.Any()
-            ? DataStorage.Authors.Max(a => a.Id) + 1
-            : 1;
+        var author = _mapper.Map<Author>(newAuthorDto);
 
-        DataStorage.Authors.Add(author);
+        _context.Authors.Add(author);
+        await _context.SaveChangesAsync();
         return _mapper.Map<AuthorReadDto>(author);
     }
 
     /// <summary>
     /// Updates an existing author's details.
     /// </summary>
-    public bool Update(int id, AuthorUpdateDto updatedAuthor)
+    public async Task<bool> UpdateAsync(int id, AuthorUpdateDto updatedDto)
     {
-        var author = DataStorage.Authors.FirstOrDefault(a => a.Id == id);
+        var author = await _context.Authors.FindAsync(id);
         if (author == null)
             throw new AuthorNotFoundException(id);
 
-        author.FullName = updatedAuthor.FullName;
-        author.Bio = updatedAuthor.Bio;
-        author.DateOfBirth = updatedAuthor.DateOfBirth;
+        author.FirstName = updatedDto.FirstName;
+        author.FirstName = updatedDto.LastName;
+        author.Bio = updatedDto.Bio;
+        author.BirthDate = updatedDto.BirthDate;
 
+        await _context.SaveChangesAsync();
         return true;
     }
 
     /// <summary>
     /// Deletes an author and detaches their books.
     /// </summary>
-    public bool Delete(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var author = DataStorage.Authors.FirstOrDefault(a => a.Id == id);
+        var author = await _context.Authors.Include(a => a.Books).FirstOrDefaultAsync(a => a.Id == id);
         if (author == null)
             throw new AuthorNotFoundException(id);
 
         // Set AuthorId to 0 for books written by the deleted author
-        foreach (var book in DataStorage.Books.Where(b => b.AuthorId == author.Id))
+        foreach (var book in author.Books)
         {
             book.AuthorId = 0;
         }
 
-        DataStorage.Authors.Remove(author);
+        _context.Authors.Remove(author);
+        await _context.SaveChangesAsync();
+
         return true;
     }
 }

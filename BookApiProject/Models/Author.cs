@@ -1,25 +1,19 @@
-/// <summary>
-/// Represents an author in the system.
-/// </summary>
-public class Author
+﻿using System;
+using System.Collections.Generic;
+
+namespace BookApiProject.Models;
+
+public partial class Author
 {
-    /// <summary>
-    /// Unique identifier of the author.
-    /// </summary>
     public int Id { get; set; }
 
-    /// <summary>
-    /// Full name of the author.
-    /// </summary>
-    public string FullName { get; set; } = string.Empty;
+    public string FirstName { get; set; } = null!;
 
-    /// <summary>
-    /// Optional biography of the author.
-    /// </summary>
+    public string LastName { get; set; } = null!;
+
+    public DateOnly? BirthDate { get; set; }
+
     public string? Bio { get; set; }
 
-    /// <summary>
-    /// Date of birth of the author.
-    /// </summary>
-    public DateTime DateOfBirth { get; set; }
+    public virtual ICollection<Book> Books { get; set; } = new List<Book>();
 }

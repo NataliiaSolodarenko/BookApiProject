@@ -14,21 +14,11 @@ public class BooksController : ControllerBase
     }
 
     /// <summary>
-    /// Test method that throws an exception.
-    /// </summary>
-    /// <response code="500">Always throws an exception (for testing).</response>
-    [HttpGet("test-error")]
-    public IActionResult ThrowError()
-    {
-        throw new Exception("Test error");
-    }
-
-    /// <summary>
     /// Retrieves all books.
     /// </summary>
     /// <response code="200">Returns a list of all books.</response>
     [HttpGet]
-    public ActionResult<IEnumerable<BookReadDto>> GetAll() => Ok(_bookService.GetAll());
+    public async Task<ActionResult<IEnumerable<BookReadDto>>> GetAllAsync() => Ok(await _bookService.GetAllAsync());
 
     /// <summary>
     /// Retrieves a specific book by ID.
@@ -38,9 +28,9 @@ public class BooksController : ControllerBase
     /// <response code="404">Book not found.</response>
     [HttpGet("{id}")]
     [ValidateId]
-    public ActionResult<BookReadDto> GetById(int id)
+    public async Task<ActionResult<BookReadDto>> GetByIdAsync(int id)
     {
-        var book = _bookService.GetById(id);
+        var book = await _bookService.GetByIdAsync(id);
         return book == null ? NotFound() : Ok(book);
     }
 
@@ -52,10 +42,10 @@ public class BooksController : ControllerBase
     /// <response code="400">Invalid book data.</response>
     /// <response code="404">Author not found.</response>
     [HttpPost]
-    public ActionResult<BookReadDto> Create(BookCreateDto newBook)
+    public async Task<ActionResult<BookReadDto>> CreateAsync(BookCreateDto newBook)
     {
-        var created = _bookService.Create(newBook);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        var created = await _bookService.CreateAsync(newBook);
+        return CreatedAtAction(nameof(GetByIdAsync), new { id = created.Id }, created);
     }
 
     /// <summary>
@@ -67,9 +57,9 @@ public class BooksController : ControllerBase
     /// <response code="404">Book not found.</response>
     [HttpPut("{id}")]
     [ValidateId]
-    public IActionResult Update(int id, BookUpdateDto updatedBook)
+    public async Task<IActionResult> UpdateAsync(int id, BookUpdateDto updatedBook)
     {
-        var success = _bookService.Update(id, updatedBook);
+        var success = await _bookService.UpdateAsync(id, updatedBook);
         return success ? NoContent() : NotFound();
     }
 
@@ -81,9 +71,9 @@ public class BooksController : ControllerBase
     /// <response code="404">Book not found.</response>
     [HttpDelete("{id}")]
     [ValidateId]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> DeleteAsync(int id)
     {
-        var success = _bookService.Delete(id);
+        var success = await _bookService.DeleteAsync(id);
         return success ? NoContent() : NotFound();
     }
 }

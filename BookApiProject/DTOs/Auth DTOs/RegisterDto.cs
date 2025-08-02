@@ -27,5 +27,5 @@ public class RegisterDto
     /// <summary>
     /// User's date of birth.
     /// </summary>
-    public DateTime DateOfBirth { get; set; }
+    public DateOnly DateOfBirth { get; set; }
 }

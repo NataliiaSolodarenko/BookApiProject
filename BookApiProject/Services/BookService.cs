@@ -1,5 +1,7 @@
 using AutoMapper;
 using MyApp.Exceptions;
+using Microsoft.EntityFrameworkCore;
+using BookApiProject.Models;
 
 /// <summary>
 /// Service for managing books.
@@ -7,26 +9,31 @@ using MyApp.Exceptions;
 /// </summary>
 public class BookService : IBookService
 {
+    private readonly BookDbContext _context;
     private readonly IMapper _mapper;
 
-    public BookService(IMapper mapper)
+    public BookService(BookDbContext context, IMapper mapper)
     {
+        _context = context;
         _mapper = mapper;
     }
 
     /// <summary>
     /// Retrieves all books from the data store.
     /// </summary>
-    public IEnumerable<BookReadDto> GetAll() =>
-        _mapper.Map<IEnumerable<BookReadDto>>(DataStorage.Books);
+    public async Task<IEnumerable<BookReadDto>> GetAllAsync()
+    {
+        var books = await _context.Books.ToListAsync();
+        return _mapper.Map<IEnumerable<BookReadDto>>(books);
+    }
 
     /// <summary>
     /// Retrieves a specific book by ID.
     /// Throws BookNotFoundException if the book does not exist.
     /// </summary>
-    public BookReadDto GetById(int id)
+    public async Task<BookReadDto> GetByIdAsync(int id)
     {
-        var book = DataStorage.Books.FirstOrDefault(b => b.Id == id);
+        var book = await _context.Books.FindAsync(id);
         if (book == null)
             throw new BookNotFoundException(id);
 
@@ -37,17 +44,15 @@ public class BookService : IBookService
     /// Creates a new book.
     /// Validates that the referenced author exists.
     /// </summary>
-    public BookReadDto Create(BookCreateDto newBook)
+    public async Task<BookReadDto> CreateAsync(BookCreateDto newBookDto)
     {
-        var book = _mapper.Map<Book>(newBook);
-        book.Id = DataStorage.Books.Any()
-            ? DataStorage.Books.Max(b => b.Id) + 1
-            : 1;
+        var book = _mapper.Map<Book>(newBookDto);
 
-        if (!DataStorage.Authors.Any(a => a.Id == book.AuthorId))
+        if (await _context.Authors.FindAsync(book.AuthorId) == null)
             throw new AuthorNotFoundException(book.AuthorId);
 
-        DataStorage.Books.Add(book);
+        _context.Books.Add(book);
+        await _context.SaveChangesAsync();
         return _mapper.Map<BookReadDto>(book);
     }
 
@@ -55,34 +60,38 @@ public class BookService : IBookService
     /// Updates an existing book's details.
     /// If author is changed, validates that the new author exists.
     /// </summary>
-    public bool Update(int id, BookUpdateDto updatedBook)
+    public async Task<bool> UpdateAsync(int id, BookUpdateDto updatedDto)
     {
-        var book = DataStorage.Books.FirstOrDefault(b => b.Id == id);
+        var book = await _context.Books.FindAsync(id);
         if (book == null)
             throw new BookNotFoundException(id);
 
-        book.Title = updatedBook.Title;
-        book.Genre = updatedBook.Genre;
+        book.Title = updatedDto.Title;
+        book.Genre = updatedDto.Genre;
 
-        if (book.AuthorId != updatedBook.AuthorId &&
-            !DataStorage.Authors.Any(a => a.Id == updatedBook.AuthorId))
+        if (book.AuthorId != updatedDto.AuthorId)
         {
-            throw new AuthorNotFoundException(updatedBook.AuthorId);
-        }
+            if (await _context.Authors.FindAsync(updatedDto.AuthorId) == null)
+                throw new AuthorNotFoundException(updatedDto.AuthorId);
 
+            book.AuthorId = updatedDto.AuthorId;
+        } 
+
+        await _context.SaveChangesAsync();
         return true;
     }
 
     /// <summary>
     /// Deletes a book by ID.
     /// </summary>
-    public bool Delete(int id)
+    public async Task<bool> DeleteAsync(int id)
     {
-        var book = DataStorage.Books.FirstOrDefault(b => b.Id == id);
+        var book = await _context.Books.FindAsync(id);
         if (book == null)
             throw new BookNotFoundException(id);
 
-        DataStorage.Books.Remove(book);
+        _context.Books.Remove(book);
+        await _context.SaveChangesAsync();
         return true;
     }
 }

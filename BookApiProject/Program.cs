@@ -6,6 +6,9 @@ using Microsoft.OpenApi.Models;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using Microsoft.EntityFrameworkCore;
+using BookApiProject.Models;
+
 
 // Create a WebApplication builder instance
 var builder = WebApplication.CreateBuilder(args);
@@ -15,6 +18,15 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 // Add support for API controllers
 builder.Services.AddControllers();
+
+builder.Services.AddDbContext<BookDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new DateOnlyJsonConverter());
+});
+
 
 // Bind JWT settings from configuration file (appsettings.json)
 builder.Services.Configure<JwtSettings>(
@@ -127,7 +139,7 @@ builder.Services.AddSwaggerGen(c =>
 // Register application services with dependency injection
 builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IAuthorService, AuthorService>();
-builder.Services.AddSingleton<IAuthService, AuthService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
 
 // Build the application
 var app = builder.Build();

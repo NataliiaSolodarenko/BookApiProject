@@ -1,4 +1,7 @@
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+using BookApiProject.Models;
+
 
 /// <summary>
 /// AutoMapper profile for mapping between entities and DTOs.

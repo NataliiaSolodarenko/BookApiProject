@@ -1,36 +1,21 @@
-/// <summary>
-/// Represents an application user.
-/// </summary>
-public class User
+﻿using System;
+using System.Collections.Generic;
+
+namespace BookApiProject.Models;
+
+public partial class User
 {
-    /// <summary>
-    /// Unique identifier of the user.
-    /// </summary>
     public int Id { get; set; }
 
-    /// <summary>
-    /// Username of the user (used for login).
-    /// </summary>
-    public string Username { get; set; } = string.Empty;
+    public string Username { get; set; } = null!;
 
-    /// <summary>
-    /// Email address of the user.
-    /// </summary>
-    public string Email { get; set; } = string.Empty;
+    public string Email { get; set; } = null!;
 
-    /// <summary>
-    /// Hashed password for authentication.
-    /// </summary>
-    public string PasswordHash { get; set; } = string.Empty;
+    public string PasswordHash { get; set; } = null!;
 
-    /// <summary>
-    /// Date of birth of the user.
-    /// </summary>
-    public DateTime DateOfBirth { get; set; }
+    public DateOnly? DateOfBirth { get; set; }
 
-    /// <summary>
-    /// Role assigned to the user (e.g., User, Admin).
-    /// Default role is "User".
-    /// </summary>
-    public string Role { get; set; } = "User";
+    public int RoleId { get; set; }
+
+    public virtual Role Role { get; set; } = null!;
 }

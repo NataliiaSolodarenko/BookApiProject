@@ -20,9 +20,9 @@ public class AuthController : ControllerBase
     /// <response code="200">Returns a valid JWT token.</response>
     /// <response code="401">Invalid username or password.</response>
     [HttpPost("login")]
-    public IActionResult Login([FromBody] LoginDto loginInfo)
+    public async Task<IActionResult> LoginAsync([FromBody] LoginDto loginInfo)
     {
-        var token = _authService.Login(loginInfo);
+        var token = await _authService.LoginAsync(loginInfo);
         return Ok(new { Token = token });
     }
 
@@ -33,9 +33,9 @@ public class AuthController : ControllerBase
     /// <response code="200">Registration successful.</response>
     /// <response code="409">Username or email already in use.</response>
     [HttpPost("register")]
-    public IActionResult Register([FromBody] RegisterDto registerInfo)
+    public async Task<IActionResult> RegisterAsync([FromBody] RegisterDto registerInfo)
     {
-        _authService.Register(registerInfo);
+        await _authService.RegisterAsync(registerInfo);
         return Ok("Register successful");
     }
 
@@ -46,9 +46,9 @@ public class AuthController : ControllerBase
     /// <response code="200">User deleted successfully.</response>
     /// <response code="401">Invalid username or password.</response>
     [HttpPost("deleteWithUsername")]
-    public IActionResult DeleteUserWithUsername([FromBody] DeleteUserWithUsernameDto userDeleteInfo)
+    public async Task<IActionResult> DeleteUserWithUsernameAsync([FromBody] DeleteUserWithUsernameDto userDeleteInfo)
     {
-        _authService.DeleteUserWithUsername(userDeleteInfo);
+        await _authService.DeleteUserWithUsernameAsync(userDeleteInfo);
         return Ok("Deletion successful");
     }
 
@@ -59,9 +59,9 @@ public class AuthController : ControllerBase
     /// <response code="200">User deleted successfully.</response>
     /// <response code="404">User with this email does not exist.</response>
     [HttpPost("deleteWithEmail")]
-    public IActionResult DeleteUserWithEmail([FromBody] DeleteUserWithEmailDto userDeleteInfo)
+    public async Task<IActionResult> DeleteUserWithEmailAsync([FromBody] DeleteUserWithEmailDto userDeleteInfo)
     {
-        _authService.DeleteUserWithEmail(userDeleteInfo);
+        await _authService.DeleteUserWithEmailAsync(userDeleteInfo);
         return Ok("Deletion successful");
     }
 }

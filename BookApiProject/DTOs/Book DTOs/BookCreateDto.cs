@@ -9,14 +9,14 @@ public class BookCreateDto
     /// Title of the book (max 200 characters).
     /// </summary>
     [Required]
-    [MaxLength(200)]
+    [MaxLength(50)]
     public string Title { get; set; } = string.Empty;
 
     /// <summary>
     /// Genre of the book (max 100 characters).
     /// </summary>
     [Required]
-    [MaxLength(100)]
+    [MaxLength(50)]
     public string Genre { get; set; } = string.Empty;
 
     /// <summary>
