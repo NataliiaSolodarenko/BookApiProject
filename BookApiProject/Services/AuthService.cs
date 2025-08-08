@@ -5,6 +5,9 @@ using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
 using MyApp.Exceptions;
+using BookApiProject.Models;
+using Microsoft.EntityFrameworkCore;
+
 
 /// <summary>
 /// Service for authentication and user management.
@@ -12,11 +15,13 @@ using MyApp.Exceptions;
 /// </summary>
 public class AuthService : IAuthService
 {
+    private readonly BookDbContext _context;
     private readonly IMapper _mapper;
     private readonly JwtSettings _jwtSettings;
 
-    public AuthService(IMapper mapper, IOptions<JwtSettings> jwtSettings)
+    public AuthService(BookDbContext context, IMapper mapper, IOptions<JwtSettings> jwtSettings)
     {
+        _context = context;
         _mapper = mapper;
         _jwtSettings = jwtSettings.Value;
     }
@@ -25,9 +30,9 @@ public class AuthService : IAuthService
     /// Attempts to log in a user and returns a JWT token if successful.
     /// Throws exceptions for invalid username or password.
     /// </summary>
-    public string? Login(LoginDto loginInfo)
+    public async Task<string?> LoginAsync(LoginDto loginInfo)
     {
-        var user = DataStorage.Users.FirstOrDefault(u => u.Username == loginInfo.Username);
+        var user = await _context.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Username == loginInfo.Username);
         if (user == null)
             throw new UserWithUsernameDoesNotExist();
 
@@ -41,21 +46,20 @@ public class AuthService : IAuthService
     /// Registers a new user.
     /// Throws exceptions if the username or email is already in use.
     /// </summary>
-    public bool Register(RegisterDto registerInfo)
+    public async Task<bool> RegisterAsync(RegisterDto registerInfo)
     {
-        if (DataStorage.Users.Any(u => u.Username == registerInfo.Username))
+        if (await _context.Users.AnyAsync(u => u.Username == registerInfo.Username))
             throw new UsernameIsAlreadyInUse();
 
-        if (DataStorage.Users.Any(u => u.Email == registerInfo.Email))
+        if (await _context.Users.AnyAsync(u => u.Email == registerInfo.Email))
             throw new EmailIsAlreadyInUse();
 
         var user = _mapper.Map<User>(registerInfo);
-        user.Id = DataStorage.Users.Any()
-            ? DataStorage.Users.Max(u => u.Id) + 1
-            : 1;
         user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(registerInfo.Password);
+        user.RoleId = 3;
 
-        DataStorage.Users.Add(user);
+        _context.Users.Add(user);
+        await _context.SaveChangesAsync();
         return true;
     }
 
@@ -63,16 +67,17 @@ public class AuthService : IAuthService
     /// Deletes a user account by username.
     /// Requires the correct password for verification.
     /// </summary>
-    public bool DeleteUserWithUsername(DeleteUserWithUsernameDto userDeleteInfo)
+    public async Task<bool> DeleteUserWithUsernameAsync(DeleteUserWithUsernameDto userDeleteInfo)
     {
-        var user = DataStorage.Users.FirstOrDefault(u => u.Username == userDeleteInfo.Username);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == userDeleteInfo.Username);
         if (user == null)
             throw new UserWithUsernameDoesNotExist();
 
         if (!BCrypt.Net.BCrypt.Verify(userDeleteInfo.Password, user.PasswordHash))
             throw new PasswordIncorrect();
 
-        DataStorage.Users.Remove(user);
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
         return true;
     }
 
@@ -80,13 +85,14 @@ public class AuthService : IAuthService
     /// Deletes a user account by email.
     /// Does not require password verification.
     /// </summary>
-    public bool DeleteUserWithEmail(DeleteUserWithEmailDto userDeleteInfo)
+    public async Task<bool> DeleteUserWithEmailAsync(DeleteUserWithEmailDto userDeleteInfo)
     {
-        var user = DataStorage.Users.FirstOrDefault(u => u.Email == userDeleteInfo.Email);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == userDeleteInfo.Email);
         if (user == null)
             throw new UserWithEmailDoesNotExist();
 
-        DataStorage.Users.Remove(user);
+        _context.Users.Remove(user);
+        await _context.SaveChangesAsync();
         return true;
     }
 
@@ -104,7 +110,7 @@ public class AuthService : IAuthService
             {
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-                new Claim(ClaimTypes.Role, user.Role)
+                new Claim(ClaimTypes.Role, user.Role.RoleName)
             }),
             Expires = DateTime.UtcNow.AddMinutes(_jwtSettings.ExpiresInMinutes),
             Issuer = _jwtSettings.Issuer,

@@ -3,11 +3,11 @@
 /// </summary>
 public interface IAuthorService
 {
-    IEnumerable<AuthorReadDto> GetAll();
-    AuthorReadDto GetById(int id);
-    AuthorReadDto Create(AuthorCreateDto newAuthor);
-    bool Update(int id, AuthorUpdateDto updatedAuthor);
-    bool Delete(int id);
+    Task<IEnumerable<AuthorReadDto>> GetAllAsync();
+    Task<AuthorReadDto> GetByIdAsync(int id);
+    Task<AuthorReadDto> CreateAsync(AuthorCreateDto newAuthorDto);
+    Task<bool> UpdateAsync(int id, AuthorUpdateDto updatedDto);
+    Task<bool> DeleteAsync(int id);
 }
 
 

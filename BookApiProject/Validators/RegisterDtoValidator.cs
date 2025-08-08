@@ -10,7 +10,7 @@ public class RegisterDtoValidator : AbstractValidator<RegisterDto>
     {
         // Ensure date of birth is realistic
         RuleFor(x => x.DateOfBirth)
-            .GreaterThan(DateTime.Today.AddYears(-130))
+            .GreaterThan(DateOnly.FromDateTime(DateTime.Today.AddYears(-130)))
             .WithMessage("Your date of birth must be real.");
 
         // Ensure email is valid

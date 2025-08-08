@@ -3,8 +3,8 @@
 /// </summary>
 public interface IAuthService
 {
-    string? Login(LoginDto loginInfo);
-    bool Register(RegisterDto registerInfo);
-    bool DeleteUserWithUsername(DeleteUserWithUsernameDto userDeleteInfo);
-    bool DeleteUserWithEmail(DeleteUserWithEmailDto userDeleteInfo);
+    Task<string?> LoginAsync(LoginDto loginInfo);
+    Task<bool> RegisterAsync(RegisterDto registerInfo);
+    Task<bool> DeleteUserWithUsernameAsync(DeleteUserWithUsernameDto userDeleteInfo);
+    Task<bool> DeleteUserWithEmailAsync(DeleteUserWithEmailDto userDeleteInfo);
 }

@@ -18,7 +18,7 @@ public class AuthorsController : ControllerBase
     /// </summary>
     /// <response code="200">Returns a list of all authors.</response>
     [HttpGet]
-    public ActionResult<IEnumerable<AuthorReadDto>> GetAll() => Ok(_authorService.GetAll());
+    public async Task<ActionResult<IEnumerable<AuthorReadDto>>> GetAllAsync() => Ok(await _authorService.GetAllAsync());
 
     /// <summary>
     /// Retrieves a specific author by ID.
@@ -28,9 +28,9 @@ public class AuthorsController : ControllerBase
     /// <response code="404">Author not found.</response>
     [HttpGet("{id}")]
     [ValidateId]
-    public ActionResult<AuthorReadDto> GetById(int id)
+    public async Task<ActionResult<AuthorReadDto>> GetByIdAsync(int id)
     {
-        var author = _authorService.GetById(id);
+        var author = await _authorService.GetByIdAsync(id);
         return Ok(author);
     }
 
@@ -41,10 +41,10 @@ public class AuthorsController : ControllerBase
     /// <response code="201">Author created successfully.</response>
     /// <response code="400">Invalid author data.</response>
     [HttpPost]
-    public ActionResult Create(AuthorCreateDto newAuthor)
+    public async Task<ActionResult> CreateAsync([FromBody] AuthorCreateDto newAuthor)
     {
-        var created = _authorService.Create(newAuthor);
-        return CreatedAtAction(nameof(GetById), new { id = created.Id }, created);
+        var created = await _authorService.CreateAsync(newAuthor);
+        return Created($"/api/authors/{created.Id}", created);
     }
 
     /// <summary>
@@ -56,9 +56,9 @@ public class AuthorsController : ControllerBase
     /// <response code="404">Author not found.</response>
     [HttpPut("{id}")]
     [ValidateId]
-    public IActionResult Update(int id, AuthorUpdateDto updatedAuthor)
+    public async Task<IActionResult> UpdateAsync(int id, AuthorUpdateDto updatedAuthor)
     {
-        _authorService.Update(id, updatedAuthor);
+        await _authorService.UpdateAsync(id, updatedAuthor);
         return NoContent();
     }
 
@@ -72,9 +72,9 @@ public class AuthorsController : ControllerBase
     [HttpDelete("{id}")]
     [ValidateId]
     [Authorize(Roles = "Admin")]
-    public IActionResult Delete(int id)
+    public async Task<IActionResult> DeleteAsync(int id)
     {
-        _authorService.Delete(id);
+        await _authorService.DeleteAsync(id);
         return NoContent();
     }
 }

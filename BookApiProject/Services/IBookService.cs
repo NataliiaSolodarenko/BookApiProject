@@ -3,9 +3,9 @@
 /// </summary>
 public interface IBookService
 {
-    IEnumerable<BookReadDto> GetAll();
-    BookReadDto GetById(int id);
-    BookReadDto Create(BookCreateDto newBook);
-    bool Update(int id, BookUpdateDto updatedBook);
-    bool Delete(int id);
+    Task<IEnumerable<BookReadDto>> GetAllAsync();
+    Task<BookReadDto> GetByIdAsync(int id);
+    Task<BookReadDto> CreateAsync(BookCreateDto newBookDto);
+    Task<bool> UpdateAsync(int id, BookUpdateDto updatedDto);
+    Task<bool> DeleteAsync(int id);
 }
