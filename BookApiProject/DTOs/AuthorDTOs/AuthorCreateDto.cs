@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace BookApiProject.AuthorDTOs;
+
 /// <summary>
 /// DTO for creating a new author.
 /// </summary>

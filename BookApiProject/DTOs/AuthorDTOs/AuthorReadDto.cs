@@ -1,3 +1,5 @@
+namespace BookApiProject.AuthorDTOs;
+
 /// <summary>
 /// DTO for reading author details.
 /// </summary>

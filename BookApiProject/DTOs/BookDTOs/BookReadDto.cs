@@ -1,3 +1,5 @@
+namespace BookApiProject.BookDTOs;
+
 /// <summary>
 /// DTO for reading book details.
 /// </summary>

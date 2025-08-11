@@ -1,3 +1,7 @@
+using BookApiProject.AuthorDTOs;
+
+namespace BookApiProject.Services;
+
 /// <summary>
 /// Defines operations for managing authors.
 /// </summary>

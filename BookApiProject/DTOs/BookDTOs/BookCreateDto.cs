@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace BookApiProject.BookDTOs;
+
 /// <summary>
 /// DTO for creating a new book.
 /// </summary>

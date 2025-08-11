@@ -1,3 +1,7 @@
+using BookApiProject.BookDTOs;
+
+namespace BookApiProject.Services;
+
 /// <summary>
 /// Defines operations for managing books.
 /// </summary>

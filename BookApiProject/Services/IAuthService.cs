@@ -1,3 +1,7 @@
+using BookApiProject.AuthDTOs;
+
+namespace BookApiProject.Services;
+
 /// <summary>
 /// Defines authentication and user account management operations.
 /// </summary>

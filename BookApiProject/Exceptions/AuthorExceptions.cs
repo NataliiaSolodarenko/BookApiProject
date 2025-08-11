@@ -1,5 +1,5 @@
-namespace MyApp.Exceptions
-{
+namespace BookApiProject.Exceptions;
+
     /// <summary>
     /// Exception thrown when an author with the specified ID could not be found.
     /// </summary>
@@ -8,4 +8,3 @@ namespace MyApp.Exceptions
         public AuthorNotFoundException(int id)
             : base($"Author with ID {id} not found.") { }
     }
-}

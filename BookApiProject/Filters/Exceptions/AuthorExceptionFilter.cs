@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using MyApp.Exceptions;
+using BookApiProject.Exceptions;
+
+namespace BookApiProject.ExceptionFilters;
 
 /// <summary>
 /// Exception filter for handling author-related exceptions.

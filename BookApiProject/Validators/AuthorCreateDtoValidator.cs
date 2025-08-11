@@ -1,5 +1,7 @@
 using FluentValidation;
-using System;
+using BookApiProject.AuthorDTOs;
+
+namespace BookApiProject.Validators;
 
 /// <summary>
 /// Validator for <see cref="AuthorCreateDto"/>.
