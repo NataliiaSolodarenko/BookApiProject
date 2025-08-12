@@ -1,5 +1,11 @@
 using Microsoft.AspNetCore.HttpLogging;
 using Microsoft.AspNetCore.Mvc;
+using BookApiProject.AuthDTOs;
+using BookApiProject.Services;
+using BookApiProject.ExceptionFilters;
+
+
+namespace BookApiProject.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

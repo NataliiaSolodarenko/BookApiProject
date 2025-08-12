@@ -4,9 +4,12 @@ using System.Text;
 using AutoMapper;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.Extensions.Options;
-using MyApp.Exceptions;
 using BookApiProject.Models;
 using Microsoft.EntityFrameworkCore;
+using BookApiProject.AuthDTOs;
+using BookApiProject.Exceptions;
+
+namespace BookApiProject.Services;
 
 
 /// <summary>

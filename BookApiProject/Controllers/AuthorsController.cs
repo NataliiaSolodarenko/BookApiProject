@@ -1,5 +1,11 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using BookApiProject.AuthorDTOs;
+using BookApiProject.Services;
+using BookApiProject.ExceptionFilters;
+using BookApiProject.ValidationFilters;
+
+namespace BookApiProject.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]

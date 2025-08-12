@@ -1,3 +1,5 @@
+namespace BookApiProject;
+
 /// <summary>
 /// Configuration settings for JWT authentication.
 /// Loaded from the "JwtSettings" section in appsettings.json.

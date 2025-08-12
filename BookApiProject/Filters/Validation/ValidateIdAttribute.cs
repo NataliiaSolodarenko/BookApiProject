@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
+namespace BookApiProject.ValidationFilters;
+
 /// <summary>
 /// Action filter that validates the "id" parameter in a controller action.
 /// Ensures that the ID value is not negative before the action executes.

@@ -8,6 +8,9 @@ using System.Text;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using BookApiProject.Models;
+using BookApiProject.Services;
+using BookApiProject.Validators;
+using BookApiProject;
 
 
 // Create a WebApplication builder instance

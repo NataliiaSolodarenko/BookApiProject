@@ -1,5 +1,5 @@
-namespace MyApp.Exceptions
-{
+namespace BookApiProject.Exceptions;
+
     /// <summary>
     /// Exception thrown when the provided password is incorrect.
     /// </summary>
@@ -39,4 +39,3 @@ namespace MyApp.Exceptions
     {
         public EmailIsAlreadyInUse() : base("Email is already in use.") { }
     }
-}

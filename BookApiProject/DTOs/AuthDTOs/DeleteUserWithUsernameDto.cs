@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace BookApiProject.AuthDTOs;
+
 /// <summary>
 /// DTO for deleting a user by username, requiring password confirmation.
 /// </summary>

@@ -1,7 +1,10 @@
 using AutoMapper;
-using MyApp.Exceptions;
+using BookApiProject.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using BookApiProject.Models;
+using BookApiProject.AuthorDTOs;
+
+namespace BookApiProject.Services;
 
 /// <summary>
 /// Service for managing authors.

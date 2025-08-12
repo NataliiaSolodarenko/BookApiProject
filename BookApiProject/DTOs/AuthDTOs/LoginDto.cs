@@ -1,5 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 
+namespace BookApiProject.AuthDTOs;
+
 /// <summary>
 /// DTO for user login.
 /// </summary>

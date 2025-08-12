@@ -1,3 +1,5 @@
+namespace BookApiProject;
+
 /// <summary>
 /// Middleware for handling unhandled exceptions in the request pipeline.
 /// Logs the error and returns a standardized JSON response.

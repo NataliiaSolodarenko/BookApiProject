@@ -1,3 +1,5 @@
+namespace BookApiProject.AuthorDTOs;
+
 /// <summary>
 /// DTO for updating an existing author.
 /// </summary>
