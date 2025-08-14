@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookApiProject.IntegrationTests", "BookApiProject.IntegrationTests.csproj", "{A0AD2C3C-B7B7-92DA-9BD5-07AC28E5E284}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A0AD2C3C-B7B7-92DA-9BD5-07AC28E5E284}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A0AD2C3C-B7B7-92DA-9BD5-07AC28E5E284}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A0AD2C3C-B7B7-92DA-9BD5-07AC28E5E284}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A0AD2C3C-B7B7-92DA-9BD5-07AC28E5E284}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {0663884A-CE8D-4E3A-B126-E17396C2AD32}
+	EndGlobalSection
+EndGlobal
